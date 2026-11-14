@@ -20,7 +20,15 @@ jobs:
         # failures (the vcpkg qtbase build currently fails on `__yield`).
         # macOS remains a required product target; its validation is pending.
         # To re-enable, add `macos-latest` back to this list.
-        os: [windows-latest, ubuntu-26.04]
+        #
+        # ubuntu-26.04 is paused: its GCC 15 toolchain fails to compile vcpkg's
+        # pinned systemd 257.8 port (`-Werror=override-init` on
+        # src/basic/errno-to-name.h, pulled in by libva/ffmpeg-vaapi) during
+        # cmake configure (vcpkg install). The apt step succeeds; this is a
+        # compiler/source incompatibility in a pinned vcpkg port, not a missing
+        # host package. ubuntu-26.04 remains a contributor target; re-enable it
+        # once the vcpkg baseline/port supports GCC 15.
+        os: [windows-latest, ubuntu-latest]
     env:
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
       VCPKG_BASELINE: 3af1d1e60af2b2abf55760538cd607829029b07a
